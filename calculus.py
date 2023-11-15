@@ -28,6 +28,23 @@ def validate_input(expression):
     # If no errors, the expression is valid
     return True
 
+# function to get number input as int or float
+def get_number_input(prompt):
+    while True:
+        user_input = input(prompt)
+        try:
+            # Try converting to float
+            value = float(user_input)
+            
+            # Check if it's actually an int
+            if value.is_integer():
+                return int(value)
+            else:
+                return value
+        except ValueError:
+            print("Please enter a valid number (int or float).")
+
+
 # Plots the curve of the expression
 def plot_expression(expression, lower, upper):
     # Define the symbol x
@@ -64,17 +81,17 @@ def user_menu():
     
     
 def process_choice(choice, expression):
-    if choice == "q":
+    if choice.lower() == "q":
         exit()
     elif choice == "1":
-        # define lower and upper limits of range to plot
-        lower = input("input lower limit of range to plot:\t")
-        upper = input("input upper limit of range to plot:\t")
+        # define lower and upper range inputs on the y-axis to plot
+        lower = get_number_input("input lower limit of range to plot:\t")
+        upper = get_number_input("input upper limit of range to plot:\t")
         plot_expression(expression, lower, upper)
     elif choice == "2":
         # Define the limits of integration
-        a = input("Please input lower limit for area integration:\t ")  # lower limit
-        b = input("Please input upper limit for area integration:\t ")  # upper limit
+        a = get_number_input("Please input lower limit for area integration:\t ")  # lower limit
+        b = get_number_input("Please input upper limit for area integration:\t ")  # upper limit
         # integrate area under part of the curve
         integrate_area(expression, a, b)   
     elif choice == "3":
@@ -82,19 +99,19 @@ def process_choice(choice, expression):
         derive_slope(expression)
     else:
         print("invalid choice, please try again")
-        main()
+        
     
     
 def main():
-    expression = input("please input your expression. Type q to quit:\t")
-    if expression == "q":
-        exit()
-    elif (validate_input(expression) == False):
-        print("Invalid expression!. Try again.")
-        main()
-    elif (validate_input(expression)):
-        choice = input(user_menu())
-        process_choice(choice, expression)
+    while True:
+        expression = input("please input your expression. Type q to quit:\t")
+        if expression.lower() == "q":
+            break
+        if (validate_input(expression) == False):
+            print("Invalid expression! Try again.")
+        else:
+            choice = input(user_menu())
+            process_choice(choice, expression)
     
 if __name__ == "__main__":
     main()
